@@ -33,7 +33,7 @@ class SessionController {
         return response.status(401).json({ error: 'Invalid password' });
       }
 
-      const token = jwt.sign({ id: user.id }, authConfig.secret, {
+      const token = jwt.sign({ id: user.id, admin: user.admin }, authConfig.secret, {
         expiresIn: authConfig.expiresIn,
       });
 
