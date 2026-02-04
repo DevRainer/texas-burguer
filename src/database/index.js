@@ -1,4 +1,3 @@
-
 // biome-ignore assist/source/organizeImports: false positive
 import { Sequelize } from 'sequelize';
 import Category from '../app/models/Category.js';
@@ -16,17 +15,24 @@ class Database {
 
   async init() {
     this.connection = new Sequelize(databaseConfig);
-    models.map(model => model.init(this.connection)).map(model => model.associate && model.associate(this.connection.models));
+
+    // Inicializar todos os modelos
+    for (const model of models) {
+      model.init(this.connection);
+    }
+
+    // Associar modelos após todos estarem inicializados
+    for (const model of models) {
+      if (model.associate) {
+        model.associate(this.connection.models);
+      }
+    }
 
     try {
       await this.connection.authenticate();
       console.log('Connection to database established successfully.');
     } catch (error) {
       console.error('Unable to connect to the database:', error.message);
-    }
-
-    for (const model of models) {
-      model.init(this.connection);
     }
   }
 }

@@ -1,13 +1,18 @@
-import Sequelize, { Model } from 'sequelize';
+import { DataTypes, Model } from 'sequelize';
 
 class Category extends Model {
   static init(sequelize) {
     return super.init(
       {
-        name: Sequelize.STRING,
-        path: Sequelize.STRING,
+        id: {
+          type: DataTypes.INTEGER,
+          autoIncrement: true,
+          primaryKey: true,
+        },
+        name: DataTypes.STRING,
+        path: DataTypes.STRING,
         url: {
-          type: Sequelize.VIRTUAL,
+          type: DataTypes.VIRTUAL,
           get() {
             return `http://localhost:3001/category-file/${this.path}`;
           }
@@ -19,6 +24,14 @@ class Category extends Model {
       },
     );
   }
+
+  static associate(models) {
+    this.hasMany(models.Product, {
+      foreignKey: 'category_id',
+      as: 'products',
+    });
+  }
 }
 
 export default Category;
+
