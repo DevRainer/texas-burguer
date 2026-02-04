@@ -23,6 +23,7 @@ routes.put('/Products/:id', adminMiddleware, upload.single('file'), ProductContr
 routes.get('/Products', ProductController.index);
 
 routes.post('/Categories', adminMiddleware,upload.single('file'), CategoryController.store);
+routes.put('/Categories/:id', adminMiddleware, upload.single('file'), CategoryController.update);
 routes.get('/Categories', CategoryController.index);
 
 export default routes;
@@ -39,3 +40,4 @@ PUT /PACH-> ALTERAR/ATUALIZAR
 GET -> BUSCAR/RECUPERAR
 DELETE -> DELETAR
 */
+

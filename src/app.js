@@ -15,6 +15,8 @@ class App {
   middlewares() {
     this.server.use(express.json());
     this.server.use('/files', fileRoutesConfig);
+    this.server.use('/category-file', fileRoutesConfig);
+
   }
 
   routes() {
@@ -23,3 +25,4 @@ class App {
 }
 
 export default new App().server;
+
