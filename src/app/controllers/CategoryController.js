@@ -16,14 +16,16 @@ class CategoryController {
 
     
     const { name } = request.body;
+    const { filename } = request.file;
 
-    const existingCategory = await Category.findOne({ where: { name } });
+    const existingCategory = await Category.findOne({ where: { name,} });
     if (existingCategory) {
       return response.status(400).json({ error: 'Category already exists' });
     }   
 
     const newCategory = await Category.create({
       name,
+       path: filename,
     });
 
     return response.status(200).json({newCategory});
