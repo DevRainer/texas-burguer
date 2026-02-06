@@ -1,5 +1,6 @@
 // biome-ignore assist/source/organizeImports: false positive
 import { Sequelize } from 'sequelize';
+import mongoose from 'mongoose';
 import Category from '../app/models/Category.js';
 import Product from '../app/models/Product.js';
 import databaseConfig from '../config/database.cjs';
@@ -11,6 +12,7 @@ class Database {
   constructor() {
     this.connection = null;
     this.init();
+    this.mongo();
   }
 
   async init() {
@@ -35,6 +37,10 @@ class Database {
       console.error('Unable to connect to the database:', error.message);
     }
   }
+  mongo() { 
+    this.mongooseConnection = mongoose.connect('mongodb://localhost:27017/texasburguer') 
+      
+    }
 }
 
 export default new Database();
