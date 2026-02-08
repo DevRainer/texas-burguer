@@ -14,9 +14,21 @@ class App {
 
   middlewares() {
     this.server.use(express.json());
+    
+    // JSON parsing error handler
+    this.server.use((err, request, response, next) => {
+      if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
+        return response.status(400).json({
+          error: 'Invalid JSON',
+          message: 'The request body contains malformed JSON. Please check your input.',
+          details: err.message
+        });
+      }
+      next();
+    });
+    
     this.server.use('/files', fileRoutesConfig);
     this.server.use('/category-file', fileRoutesConfig);
-
   }
 
   routes() {

@@ -16,8 +16,8 @@ const authMiddleware = (req, res, next) => {
         throw new Error();
       }
 
-     
       req.userId = decoded.id;
+      req.userName = decoded.name;
       req.userAdmin = decoded.admin;
     });
   } catch (_erro) {

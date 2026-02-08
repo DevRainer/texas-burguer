@@ -1,5 +1,6 @@
 import Sequelize, { Model } from 'sequelize';
 
+
 class Product extends Model {
   static init(sequelize) {
  
@@ -27,7 +28,10 @@ class Product extends Model {
   static associate(models) {
     this.belongsTo(models.Category, { 
       foreignKey: 'category_id', 
-      as: 'category' });
+      as: 'category',
+      attributes: ['name'],
+    
+    });
   }
 }
 
