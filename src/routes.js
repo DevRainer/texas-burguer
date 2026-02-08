@@ -28,6 +28,10 @@ routes.put('/Categories/:id', adminMiddleware, upload.single('file'), CategoryCo
 routes.get('/Categories', CategoryController.index);
 
 routes.post('/Orders', adminMiddleware, OrderController.store);
+routes.get('/Orders', adminMiddleware, OrderController.index);
+routes.get('/Orders/:id', adminMiddleware, OrderController.show);
+routes.put('/Orders/:id', adminMiddleware, OrderController.update);
+routes.delete('/Orders/:id', adminMiddleware, OrderController.delete);
 
 
 export default routes;
