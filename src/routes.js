@@ -7,8 +7,8 @@ import ProductController from './app/controllers/ProductController.js';
 import OrderController from './app/controllers/OrderContoller.js';
 import multer from 'multer';
 import multerConfig from './config/multer.cjs';
-import authMiddleware from './middlewares/auth.js';
-import adminMiddleware from './middlewares/admin.js';
+import authMiddleware from './app/middlewares/auth.js';
+import adminMiddleware from './app/middlewares/admin.js';
 
 const routes = new Router();
 
@@ -16,7 +16,7 @@ const upload = multer(multerConfig);
 
 routes.post('/users', UserController.store);
 routes.get('/users', UserController.index);
-routes.post('/session', SessionController.store);
+routes.post('/sessions', SessionController.store);
 
 routes.use(authMiddleware);
 routes.post('/Products', adminMiddleware, upload.single('file'), ProductController.store);
@@ -31,8 +31,10 @@ routes.post('/Orders', adminMiddleware, OrderController.store);
 routes.get('/Orders', adminMiddleware, OrderController.index);
 routes.get('/Orders/:id', adminMiddleware, OrderController.show);
 routes.put('/Orders/:id', adminMiddleware, OrderController.update);
+routes.put('/Orders/:id/status', adminMiddleware, OrderController.updateStatus);
+routes.post('/Orders/:id/advance', adminMiddleware, OrderController.advanceStatus);
+routes.get('/Orders/status/labels', adminMiddleware, OrderController.getStatusLabels);
 routes.delete('/Orders/:id', adminMiddleware, OrderController.delete);
-
 
 export default routes;
 
