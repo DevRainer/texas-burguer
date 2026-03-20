@@ -1,8 +1,8 @@
 /** biome-ignore-all assist/source/organizeImports: null*/
-import Category from '../models/Category.js';
-import Order from '../schemas/Order.js';
-import Product from '../models/Product.js';
-import OrderStatusService from '../services/OrderStatusService.js';
+import Category from "../models/Category.js";
+import Order from "../schemas/Order.js";
+import Product from "../models/Product.js";
+import OrderStatusService from "../services/OrderStatusService.js";
 
 class OrderController {
   async store(request, response) {
@@ -11,7 +11,7 @@ class OrderController {
 
     if (!productsRequest || !Array.isArray(productsRequest)) {
       return response.status(400).json({
-        error: 'Validation fails',
+        error: "Validation fails",
         messages: ['The "product" field is required and must be an array'],
       });
     }
@@ -26,16 +26,16 @@ class OrderController {
         include: [
           {
             model: Category,
-            as: 'category',
-            attributes: ['name'],
+            as: "category",
+            attributes: ["name"],
           },
         ],
       });
 
       if (products.length === 0) {
         return response.status(404).json({
-          error: 'Products not found',
-          message: 'No products were found with the provided IDs',
+          error: "Products not found",
+          message: "No products were found with the provided IDs",
         });
       }
 
@@ -51,7 +51,7 @@ class OrderController {
         return {
           id: productData.id,
           name: productData.name,
-          category: productData.category?.name || 'Uncategorized', // Assuming category_id is an object with a name property
+          category: productData.category?.name || "Uncategorized", // Assuming category_id is an object with a name property
           price: productData.price / 100, // Convert from cents to reais
           quantity: p.quantity,
           url: productData.url,
@@ -60,7 +60,7 @@ class OrderController {
 
       // Calculate total price
       const total = orderProducts.reduce((sum, p) => {
-        return sum + (p.price * p.quantity);
+        return sum + p.price * p.quantity;
       }, 0);
 
       const orderData = {
@@ -70,19 +70,17 @@ class OrderController {
         },
         products: orderProducts,
         total: Math.round(total * 100) / 100, // Round to 2 decimal places
-        status: 'pending',
+        status: "pending",
       };
-      await Order.create(orderData);
-
       const order = await Order.create(orderData);
 
       return response.status(201).json({
-        message: 'Order created successfully',
+        message: "Order created successfully",
         order,
       });
     } catch (error) {
       return response.status(500).json({
-        error: 'Error creating order',
+        error: "Error creating order",
         details: error.message,
       });
     }
@@ -94,7 +92,7 @@ class OrderController {
       return response.status(200).json(orders);
     } catch (error) {
       return response.status(500).json({
-        error: 'Error fetching orders',
+        error: "Error fetching orders",
         details: error.message,
       });
     }
@@ -106,13 +104,13 @@ class OrderController {
       const order = await Order.findById(id);
 
       if (!order) {
-        return response.status(404).json({ error: 'Order not found' });
+        return response.status(404).json({ error: "Order not found" });
       }
 
       return response.status(200).json(order);
     } catch (error) {
       return response.status(500).json({
-        error: 'Error fetching order',
+        error: "Error fetching order",
         details: error.message,
       });
     }
@@ -124,7 +122,7 @@ class OrderController {
       const order = await Order.findById(id);
 
       if (!order) {
-        return response.status(404).json({ error: 'Order not found' });
+        return response.status(404).json({ error: "Order not found" });
       }
 
       // Apply updates from request body
@@ -134,7 +132,7 @@ class OrderController {
       return response.status(200).json(order);
     } catch (error) {
       return response.status(500).json({
-        error: 'Error updating order',
+        error: "Error updating order",
         details: error.message,
       });
     }
@@ -147,7 +145,7 @@ class OrderController {
 
       if (!status) {
         return response.status(400).json({
-          error: 'Validation fails',
+          error: "Validation fails",
           messages: ['The "status" field is required'],
         });
       }
@@ -155,14 +153,14 @@ class OrderController {
       const order = await OrderStatusService.updateStatus(id, status);
 
       return response.status(200).json({
-        message: 'Order status updated successfully',
+        message: "Order status updated successfully",
         order,
         statusLabel: OrderStatusService.getStatusLabel(status),
       });
     } catch (error) {
-      const statusCode = error.message === 'Order not found' ? 404 : 400;
+      const statusCode = error.message === "Order not found" ? 404 : 400;
       return response.status(statusCode).json({
-        error: 'Error updating order status',
+        error: "Error updating order status",
         details: error.message,
       });
     }
@@ -175,14 +173,14 @@ class OrderController {
       const order = await OrderStatusService.advanceStatus(id);
 
       return response.status(200).json({
-        message: 'Order status advanced successfully',
+        message: "Order status advanced successfully",
         order,
         statusLabel: OrderStatusService.getStatusLabel(order.status),
       });
     } catch (error) {
-      const statusCode = error.message === 'Order not found' ? 404 : 400;
+      const statusCode = error.message === "Order not found" ? 404 : 400;
       return response.status(statusCode).json({
-        error: 'Error advancing order status',
+        error: "Error advancing order status",
         details: error.message,
       });
     }
@@ -199,7 +197,7 @@ class OrderController {
       });
     } catch (error) {
       return response.status(500).json({
-        error: 'Error fetching status labels',
+        error: "Error fetching status labels",
         details: error.message,
       });
     }
@@ -211,14 +209,16 @@ class OrderController {
       const order = await Order.findById(id);
 
       if (!order) {
-        return response.status(404).json({ error: 'Order not found' });
+        return response.status(404).json({ error: "Order not found" });
       }
 
       await Order.deleteOne({ _id: id });
-      return response.status(200).json({ message: 'Order deleted successfully' });
+      return response
+        .status(200)
+        .json({ message: "Order deleted successfully" });
     } catch (error) {
       return response.status(500).json({
-        error: 'Error deleting order',
+        error: "Error deleting order",
         details: error.message,
       });
     }
@@ -226,4 +226,3 @@ class OrderController {
 }
 
 export default new OrderController();
-

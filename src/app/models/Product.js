@@ -1,10 +1,8 @@
 import Sequelize, { Model } from 'sequelize';
 
-
 class Product extends Model {
   static init(sequelize) {
- 
-  return super.init(
+    return super.init(
       {
         name: Sequelize.STRING,
         price: Sequelize.INTEGER,
@@ -23,14 +21,12 @@ class Product extends Model {
         tableName: 'products',
       },
     );
- 
   }
   static associate(models) {
-    this.belongsTo(models.Category, { 
-      foreignKey: 'category_id', 
+    this.belongsTo(models.Category, {
+      foreignKey: 'category_id',
       as: 'category',
       attributes: ['name'],
-    
     });
   }
 }

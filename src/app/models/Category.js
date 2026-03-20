@@ -15,7 +15,7 @@ class Category extends Model {
           type: DataTypes.VIRTUAL,
           get() {
             return `http://localhost:3001/category-file/${this.path}`;
-          }
+          },
         },
       },
       {
@@ -34,4 +34,3 @@ class Category extends Model {
 }
 
 export default Category;
-

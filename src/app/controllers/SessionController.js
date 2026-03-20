@@ -5,7 +5,6 @@ import jwt from 'jsonwebtoken';
 import * as Yup from 'yup';
 import User from '../models/User.js';
 
-
 class SessionController {
   async store(request, response) {
     const schema = Yup.object({
@@ -33,15 +32,17 @@ class SessionController {
         return response.status(401).json({ error: 'Invalid password' });
       }
 
-      const token = jwt.sign({ 
-        id: user.id, 
-        admin: user.admin,
-        name:user.name,
-    }, 
-    authConfig.secret, 
-      {
-        expiresIn: authConfig.expiresIn,
-      });
+      const token = jwt.sign(
+        {
+          id: user.id,
+          admin: user.admin,
+          name: user.name,
+        },
+        authConfig.secret,
+        {
+          expiresIn: authConfig.expiresIn,
+        },
+      );
 
       return response.status(200).json({
         id: user.id,

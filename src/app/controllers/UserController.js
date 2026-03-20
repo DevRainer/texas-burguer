@@ -9,7 +9,7 @@ import * as Yup from 'yup';
 import User from '../models/User.js';
 
 class UserController {
-  async index( _request, response) {
+  async index(_request, response) {
     try {
       const users = await User.findAll({
         attributes: ['id', 'name', 'email', 'admin'],
