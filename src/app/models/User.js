@@ -19,9 +19,7 @@ class User extends Model {
         tableName: 'users',
       },
     );
-    
   }
 }
 
 export default User;
-

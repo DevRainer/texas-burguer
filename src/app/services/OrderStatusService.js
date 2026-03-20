@@ -1,6 +1,10 @@
 /** biome-ignore-all assist/source/organizeImports: null*/
 import Order from '../schemas/Order.js';
-import { ORDER_STATUS, ORDER_STATUS_LABELS, VALID_ORDER_STATUSES } from '../schemas/Order.js';
+import {
+  ORDER_STATUS,
+  ORDER_STATUS_LABELS,
+  VALID_ORDER_STATUSES,
+} from '../schemas/Order.js';
 
 class OrderStatusService {
   /**
@@ -47,12 +51,14 @@ class OrderStatusService {
     // Validate the new status
     if (!this.isValidStatus(newStatus)) {
       const validStatuses = VALID_ORDER_STATUSES.join(', ');
-      throw new Error(`Invalid status: ${newStatus}. Valid statuses are: ${validStatuses}`);
+      throw new Error(
+        `Invalid status: ${newStatus}. Valid statuses are: ${validStatuses}`,
+      );
     }
 
     // Find the order
     const order = await Order.findById(orderId);
-    
+
     if (!order) {
       throw new Error('Order not found');
     }
@@ -93,13 +99,13 @@ class OrderStatusService {
    */
   async advanceStatus(orderId) {
     const order = await Order.findById(orderId);
-    
+
     if (!order) {
       throw new Error('Order not found');
     }
 
     const nextStatus = this.getNextStatus(order.status);
-    
+
     if (!nextStatus) {
       throw new Error('Order has already reached the final status');
     }
@@ -112,4 +118,3 @@ class OrderStatusService {
 }
 
 export default new OrderStatusService();
-

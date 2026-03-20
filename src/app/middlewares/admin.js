@@ -1,4 +1,3 @@
-
 const adminMiddleware = (req, res, next) => {
   const isUserAdmin = req.userAdmin;
 
