@@ -1,12 +1,14 @@
-import './database/index.js';
+import cors from 'cors';
 import express from 'express';
 import fileRoutesConfig from './config/fileRoutes.cjs';
 import routes from './routes.js';
+import  './database/index.js';
 
 class App {
   constructor() {
     this.server = express();
 
+    this.server.use(cors());
     this.middlewares();
     this.routes();
   }
@@ -15,7 +17,7 @@ class App {
     this.server.use(express.json());
 
     // JSON parsing error handler
-    this.server.use((err, request, response, next) => {
+    this.server.use((err, _request, response, next) => {
       if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
         return response.status(400).json({
           error: 'Invalid JSON',
