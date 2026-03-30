@@ -27,7 +27,8 @@ routes.post("/users", UserController.store);
 routes.get("/users", UserController.index);
 
 // login (plural) + alias (singular)
-routes.post("/session", SessionController.store);
+routes.post("/sessions", SessionController.store);
+
 
 routes.use(authMiddleware);
 routes.post(
