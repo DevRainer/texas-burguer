@@ -9,6 +9,7 @@ import multer from "multer";
 import multerConfig from "./config/multer.cjs";
 import authMiddleware from "./app/middlewares/auth.js";
 import adminMiddleware from "./app/middlewares/admin.js";
+import CreatePaymentIntentController from "./app/controllers/stripe/CreatePaymentIntentController.js";
 
 const routes = new Router();
 
@@ -28,7 +29,6 @@ routes.get("/users", UserController.index);
 
 // login (plural) + alias (singular)
 routes.post("/sessions", SessionController.store);
-
 
 routes.use(authMiddleware);
 routes.post(
@@ -105,6 +105,8 @@ routes.get(
   OrderController.getStatusLabels,
 );
 routes.delete("/Orders/:id", adminMiddleware, OrderController.delete);
+
+routes.post("/create-payment-intent", CreatePaymentIntentController.store);
 
 export default routes;
 
