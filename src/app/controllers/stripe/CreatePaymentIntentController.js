@@ -44,7 +44,10 @@ class CreatePaymentIntentController {
         },
       });
 
-      return res.json({ clientSecret: paymentIntent.client_secret });
+      return res.json({ 
+        clientSecret: paymentIntent.client_secret,
+        dpmCheckerLink: `https://dashboard.stripe.com/test/dpm_checker/${paymentIntent.id}`
+      });
     } catch (error) {
       return res.status(400).json({ error: error.message });
     }
