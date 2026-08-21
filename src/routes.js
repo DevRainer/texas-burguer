@@ -89,7 +89,7 @@ routes.put(
 );
 routes.get("/categories", CategoryController.index);
 
-routes.post("/Orders", adminMiddleware, OrderController.store);
+routes.post("/Orders", OrderController.store);
 routes.get("/Orders", adminMiddleware, OrderController.index);
 routes.get("/Orders/:id", adminMiddleware, OrderController.show);
 routes.put("/Orders/:id", adminMiddleware, OrderController.update);
