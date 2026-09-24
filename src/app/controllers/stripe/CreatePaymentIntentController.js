@@ -8,17 +8,19 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
   apiVersion: "2024-06-20", // sempre defina a versão da API
 });
 
-const calculateOrderAmount = (items) => {
+// Item prices already come in cents, the same unit Stripe expects.
+const calculateOrderAmount = (items, deliveryTax) => {
   const total = items.reduce(
     (acc, item) => acc + item.price * item.quantity,
     0,
   );
-  return total * 100; // Convert to cents
+  return Math.round(total + deliveryTax);
 };
 
 class CreatePaymentIntentController {
   async store(req, res) {
     const schema = Yup.object().shape({
+      deliveryTax: Yup.number().min(0).default(0),
       items: Yup.array()
         .required()
         .of(
@@ -32,9 +34,9 @@ class CreatePaymentIntentController {
     });
 
     try {
-      const { items } = await schema.validate(req.body);
+      const { items, deliveryTax } = await schema.validate(req.body);
 
-      const orderAmount = calculateOrderAmount(items);
+      const orderAmount = calculateOrderAmount(items, deliveryTax);
 
       const paymentIntent = await stripe.paymentIntents.create({
         amount: orderAmount,

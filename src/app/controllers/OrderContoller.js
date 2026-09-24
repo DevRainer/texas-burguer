@@ -7,7 +7,7 @@ import OrderStatusService from "../services/OrderStatusService.js";
 class OrderController {
   async store(request, response) {
     const { userId, userName } = request;
-    const { product: productsRequest } = request.body;
+    const { product: productsRequest, paymentIntentId } = request.body;
 
     if (!productsRequest || !Array.isArray(productsRequest)) {
       return response.status(400).json({
@@ -46,17 +46,19 @@ class OrderController {
       });
 
       // Build the order products array with details
-      const orderProducts = productsRequest.map((p) => {
-        const productData = productsMap[p.id];
-        return {
-          id: productData.id,
-          name: productData.name,
-          category: productData.category?.name || "Uncategorized", // Assuming category_id is an object with a name property
-          price: productData.price / 100, // Convert from cents to reais
-          quantity: p.quantity,
-          url: productData.url,
-        };
-      });
+      const orderProducts = productsRequest
+        .filter((p) => productsMap[p.id])
+        .map((p) => {
+          const productData = productsMap[p.id];
+          return {
+            id: productData.id,
+            name: productData.name,
+            category: productData.category?.name || "Uncategorized", // Assuming category_id is an object with a name property
+            price: productData.price / 100, // Convert from cents to reais
+            quantity: p.quantity,
+            url: productData.url,
+          };
+        });
 
       // Calculate total price
       const total = orderProducts.reduce((sum, p) => {
@@ -71,6 +73,7 @@ class OrderController {
         products: orderProducts,
         total: Math.round(total * 100) / 100, // Round to 2 decimal places
         status: "pending",
+        ...(paymentIntentId ? { paymentIntentId } : {}),
       };
       const order = await Order.create(orderData);
 
